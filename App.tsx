@@ -10,7 +10,7 @@ import Background from './components/Background';
 
 const App: React.FC = () => {
   return (
-    <div className="antialiased relative bg-transparent min-h-screen">
+    <div className="antialiased relative bg-white min-h-screen" style={{ isolation: 'isolate' }}>
       <Background />
       <Navbar />
       <main className="relative z-10">
@@ -21,7 +21,6 @@ const App: React.FC = () => {
       </main>
       <Footer />
       
-      {/* Global Animations CSS */}
       <style>{`
         @keyframes fadeInUp {
           from {
