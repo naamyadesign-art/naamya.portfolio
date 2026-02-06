@@ -8,17 +8,45 @@ interface ContactProps {
 
 const Contact: React.FC<ContactProps> = ({ isPage = false, onBack }) => {
   const [formData, setFormData] = useState({ name: '', email: '', query: '' });
-  const [status, setStatus] = useState<'idle' | 'sending' | 'sent'>('idle');
+  const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus('sending');
-    // Simulate API call
-    setTimeout(() => {
-      setStatus('sent');
-      setFormData({ name: '', email: '', query: '' });
-      setTimeout(() => setStatus('idle'), 3000);
-    }, 1500);
+
+    try {
+      // Using FormSubmit AJAX endpoint for seamless background delivery
+      const response = await fetch("https://formsubmit.co/ajax/naamya.design@gmail.com", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          message: formData.query,
+          _subject: `New Portfolio Query from ${formData.name}`,
+          _template: "table" // Formats the email nicely
+        })
+      });
+
+      if (response.ok) {
+        setStatus('sent');
+        setFormData({ name: '', email: '', query: '' });
+        // Reset status after success message
+        setTimeout(() => setStatus('idle'), 5000);
+      } else {
+        throw new Error("Submission failed");
+      }
+    } catch (error) {
+      console.error("Form error:", error);
+      // Fallback: Use mailto if the service is blocked or fails
+      const mailtoUrl = `mailto:naamya.design@gmail.com?subject=Portfolio Query from ${formData.name}&body=Name: ${formData.name}%0D%0AEmail: ${formData.email}%0D%0A%0D%0AMessage:%0D%0A${formData.query}`;
+      window.location.href = mailtoUrl;
+      
+      setStatus('sent'); // Still mark as sent because the user is now using their mail app
+    }
   };
 
   const socialLinkClass = "inline-flex items-center px-6 py-3.5 border-2 border-black/10 text-black rounded-full text-[10px] font-black tracking-[0.2em] uppercase transition-all hover:border-[#e63946] hover:bg-[#e63946] hover:text-white hover:scale-105 active:scale-95";
@@ -79,6 +107,7 @@ const Contact: React.FC<ContactProps> = ({ isPage = false, onBack }) => {
                 <label className="text-[10px] font-black tracking-widest uppercase text-black/40 mb-2 block transition-all group-focus-within:text-black">Your Name</label>
                 <input 
                   required
+                  name="name"
                   type="text" 
                   value={formData.name}
                   onChange={(e) => setFormData({...formData, name: e.target.value})}
@@ -91,6 +120,7 @@ const Contact: React.FC<ContactProps> = ({ isPage = false, onBack }) => {
                 <label className="text-[10px] font-black tracking-widest uppercase text-black/40 mb-2 block transition-all group-focus-within:text-black">Email Address</label>
                 <input 
                   required
+                  name="email"
                   type="email" 
                   value={formData.email}
                   onChange={(e) => setFormData({...formData, email: e.target.value})}
@@ -103,6 +133,7 @@ const Contact: React.FC<ContactProps> = ({ isPage = false, onBack }) => {
                 <label className="text-[10px] font-black tracking-widest uppercase text-black/40 mb-2 block transition-all group-focus-within:text-black">Your Query / Doubt</label>
                 <textarea 
                   required
+                  name="message"
                   rows={4}
                   value={formData.query}
                   onChange={(e) => setFormData({...formData, query: e.target.value})}
@@ -113,8 +144,8 @@ const Contact: React.FC<ContactProps> = ({ isPage = false, onBack }) => {
 
               <button 
                 type="submit"
-                disabled={status !== 'idle'}
-                className="w-full group relative bg-black text-white py-8 rounded-2xl overflow-hidden transition-all hover:bg-black hover:scale-[1.01] active:scale-[0.98] disabled:bg-black/40 shadow-xl shadow-black/10"
+                disabled={status === 'sending' || status === 'sent'}
+                className={`w-full group relative bg-black text-white py-8 rounded-2xl overflow-hidden transition-all hover:scale-[1.01] active:scale-[0.98] disabled:cursor-not-allowed shadow-xl shadow-black/10 ${status === 'sent' ? 'bg-green-600' : 'bg-black'}`}
               >
                 <span className={`flex items-center justify-center gap-4 text-sm font-black tracking-[0.5em] uppercase transition-all ${status !== 'idle' ? 'opacity-0' : 'opacity-100'}`}>
                   Send Query
@@ -125,12 +156,12 @@ const Contact: React.FC<ContactProps> = ({ isPage = false, onBack }) => {
                 
                 {status === 'sending' && (
                   <span className="absolute inset-0 flex items-center justify-center text-sm font-black tracking-[0.5em] uppercase">
-                    Processing...
+                    Delivering...
                   </span>
                 )}
                 
                 {status === 'sent' && (
-                  <span className="absolute inset-0 flex items-center justify-center text-sm font-black tracking-[0.5em] uppercase bg-green-600">
+                  <span className="absolute inset-0 flex items-center justify-center text-sm font-black tracking-[0.5em] uppercase">
                     Query Received
                   </span>
                 )}
