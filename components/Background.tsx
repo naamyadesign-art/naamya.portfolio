@@ -10,7 +10,7 @@ interface StarProps {
 
 const Star: React.FC<StarProps> = ({ color, size, mousePos, speed }) => (
   <div 
-    className="transition-transform duration-[400ms] ease-out" 
+    className="transition-transform duration-[400ms] ease-out pointer-events-none" 
     style={{ 
       width: size, 
       height: size,
@@ -35,78 +35,79 @@ const Background: React.FC = () => {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const targetPos = useRef({ x: 0, y: 0 });
   const currentPos = useRef({ x: 0, y: 0 });
+  const requestRef = useRef<number>(0);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       targetPos.current = { x: e.clientX, y: e.clientY };
     };
+    
     window.addEventListener('mousemove', handleMouseMove);
     
-    let rafId: number;
     const animate = () => {
       // Smooth interpolation (lerp)
       currentPos.current.x += (targetPos.current.x - currentPos.current.x) * 0.05;
       currentPos.current.y += (targetPos.current.y - currentPos.current.y) * 0.05;
       
       setMousePos({ x: currentPos.current.x, y: currentPos.current.y });
-      rafId = requestAnimationFrame(animate);
+      requestRef.current = requestAnimationFrame(animate);
     };
     
-    rafId = requestAnimationFrame(animate);
+    requestRef.current = requestAnimationFrame(animate);
 
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
-      cancelAnimationFrame(rafId);
+      if (requestRef.current) cancelAnimationFrame(requestRef.current);
     };
   }, []);
 
   return (
-    <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none bg-white">
+    <div className="fixed inset-0 z-[-1] overflow-hidden pointer-events-none bg-white">
       {/* High-Intensity Grain Overlay */}
-      <div className="absolute inset-0 z-30 opacity-[0.35] mix-blend-multiply pointer-events-none" 
+      <div className="absolute inset-0 z-[10] opacity-[0.4] mix-blend-multiply pointer-events-none" 
            style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }}>
       </div>
       
-      {/* Massive Reactive Blobs */}
+      {/* Massive Reactive Blobs - Increased size and vibrancy */}
       <div 
-        className="absolute w-[140vw] h-[120vh] rounded-full blur-[120px] opacity-80 animate-morph-slow"
+        className="absolute w-[160vw] h-[140vh] rounded-full blur-[140px] opacity-90 animate-morph-slow"
         style={{ 
-          background: 'radial-gradient(circle, #ff4d00 0%, transparent 65%)',
-          top: '-30%',
-          left: '-20%',
-          transform: `translate3d(${mousePos.x * 0.04}px, ${mousePos.y * 0.04}px, 0)` 
+          background: 'radial-gradient(circle, #ff4d00 0%, transparent 70%)',
+          top: '-40%',
+          left: '-30%',
+          transform: `translate3d(${mousePos.x * 0.03}px, ${mousePos.y * 0.03}px, 0)` 
         }}
       ></div>
       
       <div 
-        className="absolute w-[110vw] h-[130vh] rounded-full blur-[140px] opacity-70 animate-morph-medium"
+        className="absolute w-[130vw] h-[150vh] rounded-full blur-[160px] opacity-80 animate-morph-medium"
         style={{ 
-          background: 'radial-gradient(circle, #ff2d55 0%, transparent 65%)',
-          bottom: '-25%',
-          right: '-15%',
-          transform: `translate3d(${mousePos.x * -0.03}px, ${mousePos.y * -0.03}px, 0)` 
+          background: 'radial-gradient(circle, #ff2d55 0%, transparent 70%)',
+          bottom: '-35%',
+          right: '-25%',
+          transform: `translate3d(${mousePos.x * -0.02}px, ${mousePos.y * -0.02}px, 0)` 
         }}
       ></div>
       
       <div 
-        className="absolute w-[90vw] h-[90vh] rounded-full blur-[110px] opacity-50 animate-morph-fast"
+        className="absolute w-[100vw] h-[100vh] rounded-full blur-[120px] opacity-60 animate-morph-fast"
         style={{ 
-          background: 'radial-gradient(circle, #8ecae6 0%, transparent 65%)',
-          top: '15%',
-          right: '0%',
-          transform: `translate3d(${mousePos.x * 0.07}px, ${mousePos.y * 0.07}px, 0)` 
+          background: 'radial-gradient(circle, #8ecae6 0%, transparent 70%)',
+          top: '20%',
+          right: '5%',
+          transform: `translate3d(${mousePos.x * 0.05}px, ${mousePos.y * 0.05}px, 0)` 
         }}
       ></div>
 
-      {/* 4-Pointed Stars */}
-      <div className="absolute top-[15%] left-[15%] z-40 animate-sparkle">
-        <Star color="#ff4d00" size={180} mousePos={mousePos} speed={0.12} />
+      {/* 4-Pointed Stars (Interactive Sparkles) */}
+      <div className="absolute top-[10%] left-[10%] z-[20] animate-sparkle">
+        <Star color="#ff4d00" size={200} mousePos={mousePos} speed={0.1} />
       </div>
-      <div className="absolute top-[45%] right-[20%] z-40 animate-sparkle-delayed">
-        <Star color="#ff2d55" size={140} mousePos={mousePos} speed={-0.1} />
+      <div className="absolute top-[50%] right-[15%] z-[20] animate-sparkle-delayed">
+        <Star color="#ff2d55" size={160} mousePos={mousePos} speed={-0.08} />
       </div>
-      <div className="absolute bottom-[20%] right-[10%] z-40 animate-sparkle">
-        <Star color="#ffb703" size={220} mousePos={mousePos} speed={0.15} />
+      <div className="absolute bottom-[10%] right-[5%] z-[20] animate-sparkle">
+        <Star color="#ffb703" size={240} mousePos={mousePos} speed={0.12} />
       </div>
 
       <style>{`
@@ -119,22 +120,22 @@ const Background: React.FC = () => {
           50% { transform: scale(1.1); }
         }
         @keyframes morph-fast {
-          0%, 100% { opacity: 0.4; }
-          50% { opacity: 0.7; }
+          0%, 100% { opacity: 0.5; transform: rotate(0deg); }
+          50% { opacity: 0.8; transform: rotate(10deg); }
         }
         @keyframes sparkle {
-          0%, 100% { opacity: 0.7; transform: scale(0.9) rotate(0deg); }
-          50% { opacity: 1; transform: scale(1.1) rotate(5deg); }
+          0%, 100% { opacity: 0.7; transform: scale(0.9); }
+          50% { opacity: 1; transform: scale(1.1); }
         }
         @keyframes sparkle-delayed {
           0%, 100% { opacity: 0.5; transform: scale(0.8); }
           50% { opacity: 0.9; transform: scale(1.05); }
         }
         .animate-sparkle { animation: sparkle 5s infinite ease-in-out; }
-        .animate-sparkle-delayed { animation: sparkle-delayed 7s infinite ease-in-out; }
-        .animate-morph-slow { animation: morph-slow 22s infinite ease-in-out; }
-        .animate-morph-medium { animation: morph-medium 18s infinite ease-in-out; }
-        .animate-morph-fast { animation: morph-fast 12s infinite ease-in-out; }
+        .animate-sparkle-delayed { animation: sparkle-delayed 8s infinite ease-in-out; }
+        .animate-morph-slow { animation: morph-slow 20s infinite ease-in-out; }
+        .animate-morph-medium { animation: morph-medium 15s infinite ease-in-out; }
+        .animate-morph-fast { animation: morph-fast 10s infinite ease-in-out; }
       `}</style>
     </div>
   );
