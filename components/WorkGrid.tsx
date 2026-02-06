@@ -1,121 +1,70 @@
 
-import React, { useState, useMemo, useEffect, useRef } from 'react';
+import React from 'react';
 import { PROJECTS, DOMAINS } from '../data';
 import { Domain } from '../types';
 import ProjectCard from './ProjectCard';
 
-const WorkGrid: React.FC = () => {
-  const [activeDomain, setActiveDomain] = useState<Domain>('All');
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  const containerRef = useRef<HTMLDivElement>(null);
+interface WorkGridProps {
+  onDomainSelect: (domain: Domain) => void;
+}
 
-  const filteredProjects = useMemo(() => {
-    if (activeDomain === 'All') return PROJECTS;
-    return PROJECTS.filter(p => p.domain === activeDomain);
-  }, [activeDomain]);
-
-  useEffect(() => {
-    const handleMove = (e: MouseEvent) => {
-      if (!containerRef.current) return;
-      const { innerWidth, innerHeight } = window;
-      setMousePos({
-        x: (e.clientX / innerWidth - 0.5) * 60,
-        y: (e.clientY / innerHeight - 0.5) * 60,
-      });
-    };
-    window.addEventListener('mousemove', handleMove);
-    return () => window.removeEventListener('mousemove', handleMove);
-  }, []);
-
-  const floatingPositions = [
-    { top: '15%', left: '10%', scale: 0.95, delay: '0s' },
-    { top: '8%', left: '55%', scale: 1.1, delay: '1.2s' },
-    { top: '22%', left: '78%', scale: 0.85, delay: '0.6s' },
-    { top: '48%', left: '8%', scale: 1.05, delay: '1.8s' },
-    { top: '58%', left: '42%', scale: 1.25, delay: '2.4s' },
-    { top: '45%', left: '72%', scale: 0.9, delay: '0.3s' },
-    { top: '82%', left: '12%', scale: 1.15, delay: '2.9s' },
-    { top: '88%', left: '52%', scale: 0.95, delay: '0.9s' },
-    { top: '78%', left: '82%', scale: 1.0, delay: '1.5s' },
-  ];
-
+const WorkGrid: React.FC<WorkGridProps> = ({ onDomainSelect }) => {
   return (
-    <section id="work" className="relative min-h-[180vh] md:min-h-[250vh] py-40 overflow-hidden" ref={containerRef}>
-      {/* Header & Navigation - Sticky and fixed overlap on tablet */}
-      <div className="sticky top-20 md:top-32 z-40 px-6 md:px-12 pointer-events-none">
-        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row lg:items-end justify-between gap-12 lg:gap-20">
-          <div className="max-w-2xl pointer-events-auto bg-white/50 backdrop-blur-2xl p-8 md:p-12 rounded-[2.5rem] border border-white shadow-2xl shadow-black/5">
-            <h2 className="text-6xl md:text-8xl lg:text-9xl font-serif mb-6 tracking-tighter leading-[0.8]">Selected <br/> Works</h2>
-            <p className="text-lg md:text-xl text-black/70 font-medium leading-relaxed max-w-lg">
-              Experimental narratives through Typography, Digital Systems, and Print.
+    <section id="work" className="py-20 md:py-40 px-6 md:px-12 bg-transparent relative z-10">
+      <div className="max-w-7xl mx-auto">
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-16 md:mb-32 border-b border-black/5 pb-12 gap-12 lg:gap-20">
+          <div className="max-w-2xl">
+            <h2 className="text-5xl md:text-7xl lg:text-8xl font-serif mb-6 md:mb-8 tracking-tighter leading-none">Selected Works</h2>
+            <p className="text-lg md:text-xl text-black/50 font-light leading-relaxed max-w-xl">
+              Exploring visual boundaries through Typography, AI, and Print. Each piece is a fragment of a larger conversation on human-centric design.
             </p>
           </div>
           
-          <div className="pointer-events-auto bg-white/70 backdrop-blur-2xl px-10 py-7 rounded-full border border-white shadow-xl shadow-black/5 overflow-x-auto no-scrollbar mb-4 lg:mb-10">
-            <div className="flex items-center gap-8 md:gap-14 min-w-max">
+          <div className="lg:mb-2 overflow-x-auto no-scrollbar pb-2">
+            <div className="flex flex-wrap gap-x-6 md:gap-x-10 gap-y-5 lg:justify-end">
               {DOMAINS.map(domain => (
                 <button
                   key={domain}
-                  onClick={() => setActiveDomain(domain)}
-                  className={`group relative text-[10px] md:text-[11px] font-black tracking-[0.4em] uppercase transition-all duration-500 pb-1 ${
-                    activeDomain === domain ? 'text-black' : 'text-black/30'
-                  }`}
+                  onClick={() => onDomainSelect(domain)}
+                  className="group relative text-[10px] md:text-[11px] font-black tracking-[0.3em] uppercase transition-all duration-500 pb-2 text-black/30 hover:text-black"
                 >
                   {domain}
-                  <span className={`absolute bottom-0 left-0 h-[2.5px] bg-[#ff4d00] transition-all duration-700 ease-out ${
-                    activeDomain === domain ? 'w-full' : 'w-0'
-                  }`}></span>
+                  <span className="absolute bottom-0 left-0 h-[2.5px] bg-[#ff4d00] transition-all duration-700 ease-out w-0 group-hover:w-full"></span>
                 </button>
               ))}
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Floating Canvas */}
-      <div 
-        className="absolute inset-0 transition-transform duration-1000 ease-out pointer-events-none"
-        style={{ transform: `translate3d(${mousePos.x}px, ${mousePos.y}px, 0)` }}
-      >
-        <div className="relative w-full h-full max-w-[1800px] mx-auto">
-          {filteredProjects.map((project, index) => {
-            const pos = floatingPositions[index % floatingPositions.length];
-            return (
-              <div 
-                key={project.id}
-                className="absolute pointer-events-auto transition-all duration-700 ease-in-out hover:z-50 animate-float"
-                style={{ 
-                  top: pos.top,
-                  left: pos.left,
-                  width: 'min(420px, 65vw)',
-                  transform: `scale(${pos.scale})`,
-                  animationDelay: pos.delay
-                }}
-              >
-                <div className="shadow-[0_30px_70px_rgba(0,0,0,0.12)] hover:shadow-[0_50px_100px_rgba(0,0,0,0.2)] transition-all duration-500 rounded-sm overflow-hidden">
-                  <ProjectCard project={project} />
-                </div>
-              </div>
-            );
-          })}
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-4 md:gap-x-12 gap-y-8 md:gap-y-24">
+          {PROJECTS.slice(0, 6).map((project, index) => (
+            <div 
+              key={project.id}
+              className="animate-fade-in-up"
+              style={{ 
+                animationDelay: `${index * 100}ms`,
+              }}
+              onClick={() => onDomainSelect(project.domain)}
+            >
+              <ProjectCard project={project} />
+            </div>
+          ))}
+        </div>
+        
+        <div className="mt-20 text-center">
+          <button 
+            onClick={() => onDomainSelect('All')}
+            className="inline-flex items-center gap-4 px-10 py-5 bg-black text-white text-xs font-black tracking-[0.4em] uppercase rounded-full hover:scale-105 transition-transform"
+          >
+            View Full Archive
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
         </div>
       </div>
       
-      {filteredProjects.length === 0 && (
-        <div className="absolute inset-0 flex items-center justify-center">
-          <p className="text-black/20 font-serif italic text-4xl">Coming soon.</p>
-        </div>
-      )}
-
       <style>{`
-        @keyframes float {
-          0%, 100% { transform: translateY(0) rotate(0deg); }
-          33% { transform: translateY(-20px) rotate(1.5deg); }
-          66% { transform: translateY(15px) rotate(-1.5deg); }
-        }
-        .animate-float {
-          animation: float 10s infinite ease-in-out;
-        }
         .no-scrollbar::-webkit-scrollbar {
           display: none;
         }
