@@ -1,11 +1,14 @@
 
 import React from 'react';
 
-const About: React.FC = () => {
+interface AboutProps {
+  onReadMore: () => void;
+}
+
+const About: React.FC<AboutProps> = ({ onReadMore }) => {
   return (
     <section id="about" className="py-24 md:py-40 px-6 md:px-12 bg-white/30 backdrop-blur-xl border-y border-black/5">
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
-        {/* Adjusted max-height and max-width for tablet to keep it proportional */}
         <div className="relative aspect-[4/5] overflow-hidden grayscale hover:grayscale-0 transition-all duration-1000 rounded-sm shadow-2xl max-h-[450px] md:max-h-[550px] lg:max-h-full mx-auto w-full md:max-w-md lg:max-w-full">
           <img 
             src="https://picsum.photos/seed/naamya/1000/1250" 
@@ -17,32 +20,33 @@ const About: React.FC = () => {
         
         <div className="max-w-xl mx-auto lg:mx-0 text-center lg:text-left">
           <h2 className="text-5xl md:text-6xl lg:text-7xl font-serif mb-10 text-black tracking-tight leading-none">About Naamya</h2>
-          <div className="space-y-6 text-xl md:text-2xl text-black/80 leading-relaxed font-light">
+          <div className="space-y-6 text-xl md:text-2xl text-black/80 leading-relaxed font-light mb-12">
             <p>
               Hi, I'm Naamya Goel, a Communication Design student dedicated to uncovering the beauty in structured minimalism. I believe that good design is as little design as possible.
             </p>
-            <p>
-              My work revolves around the idea that every visual element should serve a purpose. Whether it's a typographic poster or a complex AI-integrated branding system, I focus on legibility, emotional resonance, and timeless aesthetics.
-            </p>
           </div>
           
-          <div className="mt-16 grid grid-cols-2 gap-12 border-t border-black/10 pt-12 text-left">
+          <button 
+            onClick={onReadMore}
+            className="group relative inline-flex items-center gap-6 py-4"
+          >
+            <span className="text-[11px] font-black tracking-[0.5em] uppercase text-black">Read Full Story</span>
+            <div className="w-12 h-[2px] bg-[#e63946] group-hover:w-20 transition-all duration-500 origin-left"></div>
+          </button>
+
+          <div className="mt-20 grid grid-cols-2 gap-12 border-t border-black/10 pt-12 text-left">
             <div>
               <h4 className="text-[10px] font-black tracking-widest uppercase mb-6 text-black/40">Expertise</h4>
               <ul className="text-sm md:text-base space-y-3 text-black font-semibold">
                 <li>Visual Identity</li>
                 <li>Digital Product</li>
-                <li>Editorial & Print</li>
-                <li>Typography</li>
               </ul>
             </div>
             <div>
               <h4 className="text-[10px] font-black tracking-widest uppercase mb-6 text-black/40">Tools</h4>
               <ul className="text-sm md:text-base space-y-3 text-black font-semibold">
                 <li>Adobe Suite</li>
-                <li>Figma & Sketch</li>
-                <li>Gen AI</li>
-                <li>VS Code</li>
+                <li>Figma</li>
               </ul>
             </div>
           </div>

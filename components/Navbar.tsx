@@ -3,9 +3,12 @@ import React, { useState, useEffect } from 'react';
 
 interface NavbarProps {
   onHomeClick: () => void;
+  onAboutClick: () => void;
+  onContactClick: () => void;
+  currentPath: string;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ onHomeClick }) => {
+const Navbar: React.FC<NavbarProps> = ({ onHomeClick, onAboutClick, onContactClick, currentPath }) => {
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
@@ -27,20 +30,33 @@ const Navbar: React.FC<NavbarProps> = ({ onHomeClick }) => {
         >
           Naamya Goel
         </button>
+        
         <div className="hidden md:flex space-x-12 lg:space-x-16 text-[10px] md:text-[11px] font-black tracking-[0.4em] uppercase text-black">
-          <button onClick={onHomeClick} className="relative group overflow-hidden">
+          <button 
+            onClick={onHomeClick} 
+            className={`relative group overflow-hidden ${currentPath === 'home' ? 'text-[#e63946]' : ''}`}
+          >
             <span className="block transition-transform duration-500 group-hover:-translate-y-full">Home</span>
-            <span className="absolute top-0 left-0 block translate-y-full transition-transform duration-500 group-hover:translate-y-0 text-[#ff4d00]">Home</span>
+            <span className="absolute top-0 left-0 block translate-y-full transition-transform duration-500 group-hover:translate-y-0 text-[#e63946]">Home</span>
           </button>
-          <a href="#about" className="relative group overflow-hidden">
+          
+          <button 
+            onClick={onAboutClick} 
+            className={`relative group overflow-hidden ${currentPath === 'about' ? 'text-[#e63946]' : ''}`}
+          >
             <span className="block transition-transform duration-500 group-hover:-translate-y-full">About</span>
-            <span className="absolute top-0 left-0 block translate-y-full transition-transform duration-500 group-hover:translate-y-0 text-[#ff4d00]">About</span>
-          </a>
-          <a href="#contact" className="relative group overflow-hidden">
-            <span className="block transition-transform duration-500 group-hover:-translate-y-full">Contact</span>
-            <span className="absolute top-0 left-0 block translate-y-full transition-transform duration-500 group-hover:translate-y-0 text-[#ff4d00]">Contact</span>
-          </a>
+            <span className="absolute top-0 left-0 block translate-y-full transition-transform duration-500 group-hover:translate-y-0 text-[#e63946]">About</span>
+          </button>
+          
+          <button 
+            onClick={onContactClick} 
+            className={`relative group overflow-hidden ${currentPath === 'contact' ? 'text-[#e63946]' : ''}`}
+          >
+            <span className="block transition-transform duration-500 group-hover:-translate-y-full">Contact Us</span>
+            <span className="absolute top-0 left-0 block translate-y-full transition-transform duration-500 group-hover:translate-y-0 text-[#e63946]">Contact Us</span>
+          </button>
         </div>
+
         <div className="md:hidden flex flex-col gap-1.5 cursor-pointer group">
           <div className="w-6 h-[2.5px] bg-black group-hover:w-8 transition-all"></div>
           <div className="w-5 h-[2.5px] bg-black group-hover:w-8 transition-all"></div>

@@ -1,7 +1,12 @@
 
 import React, { useState } from 'react';
 
-const Contact: React.FC = () => {
+interface ContactProps {
+  isPage?: boolean;
+  onBack?: () => void;
+}
+
+const Contact: React.FC<ContactProps> = ({ isPage = false, onBack }) => {
   const [formData, setFormData] = useState({ name: '', email: '', query: '' });
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent'>('idle');
 
@@ -16,11 +21,25 @@ const Contact: React.FC = () => {
     }, 1500);
   };
 
-  const socialLinkClass = "inline-flex items-center px-6 py-3.5 border-2 border-black/10 text-black rounded-full text-[10px] font-black tracking-[0.2em] uppercase transition-all hover:border-black hover:bg-black hover:text-white hover:scale-105 active:scale-95";
+  const socialLinkClass = "inline-flex items-center px-6 py-3.5 border-2 border-black/10 text-black rounded-full text-[10px] font-black tracking-[0.2em] uppercase transition-all hover:border-[#e63946] hover:bg-[#e63946] hover:text-white hover:scale-105 active:scale-95";
 
   return (
-    <section id="contact" className="py-48 px-6 md:px-12 bg-white/80 backdrop-blur-3xl relative z-20">
+    <section id="contact" className={`py-48 px-6 md:px-12 ${isPage ? 'min-h-screen bg-transparent' : 'bg-white/80 backdrop-blur-3xl'} relative z-20`}>
       <div className="max-w-7xl mx-auto">
+        {isPage && (
+          <div className="mb-20">
+            <button 
+              onClick={onBack}
+              className="group flex items-center gap-4 text-[10px] font-black tracking-[0.4em] uppercase text-black/40 hover:text-black transition-colors"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="group-hover:-translate-x-2 transition-transform">
+                <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+              Return Home
+            </button>
+          </div>
+        )}
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-start">
           <div className="lg:sticky lg:top-48">
             <p className="text-[10px] font-black tracking-[0.5em] uppercase text-black mb-10">Inquiries & Doubts</p>
@@ -35,10 +54,10 @@ const Contact: React.FC = () => {
               
               <div className="space-y-8">
                 <div>
-                  <p className="text-[10px] font-black tracking-widest uppercase text-black/40 mb-4">Alternative Contact</p>
-                  <a href="mailto:naamya.design@gmail.com" className="group flex items-center gap-4 text-2xl md:text-3xl font-serif italic text-black hover:text-[#ff4d00] transition-colors w-fit">
+                  <p className="text-[10px] font-black tracking-widest uppercase text-black/40 mb-4">Direct Communication</p>
+                  <a href="mailto:naamya.design@gmail.com" className="group flex items-center gap-4 text-2xl md:text-3xl font-serif italic text-black hover:text-[#e63946] transition-colors w-fit">
                     naamya.design@gmail.com
-                    <div className="w-8 h-[1px] bg-black/20 group-hover:bg-[#ff4d00] group-hover:w-12 transition-all"></div>
+                    <div className="w-8 h-[1px] bg-black/20 group-hover:bg-[#e63946] group-hover:w-12 transition-all"></div>
                   </a>
                 </div>
                 

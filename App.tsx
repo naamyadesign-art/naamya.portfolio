@@ -8,17 +8,26 @@ import Contact from './components/Contact';
 import Footer from './components/Footer';
 import Background from './components/Background';
 import DomainView from './components/DomainView';
+import AboutView from './components/AboutView';
 import { Domain } from './types';
 
 const App: React.FC = () => {
   const [currentPath, setCurrentPath] = useState<string>('home');
   const [selectedDomain, setSelectedDomain] = useState<Domain | null>(null);
 
-  // Simple router logic
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash.replace('#', '');
-      if (hash.startsWith('work/')) {
+      
+      if (hash === 'about') {
+        setCurrentPath('about');
+        setSelectedDomain(null);
+        window.scrollTo(0, 0);
+      } else if (hash === 'contact') {
+        setCurrentPath('contact');
+        setSelectedDomain(null);
+        window.scrollTo(0, 0);
+      } else if (hash.startsWith('work/')) {
         const domain = decodeURIComponent(hash.split('/')[1]) as Domain;
         setSelectedDomain(domain);
         setCurrentPath('domain');
@@ -30,13 +39,21 @@ const App: React.FC = () => {
     };
 
     window.addEventListener('hashchange', handleHashChange);
-    handleHashChange(); // Initialize
+    handleHashChange();
 
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
 
   const navigateToDomain = (domain: Domain) => {
     window.location.hash = `work/${domain}`;
+  };
+
+  const navigateToAbout = () => {
+    window.location.hash = 'about';
+  };
+
+  const navigateToContact = () => {
+    window.location.hash = 'contact';
   };
 
   const navigateHome = () => {
@@ -46,25 +63,42 @@ const App: React.FC = () => {
   return (
     <div className="antialiased relative bg-white min-h-screen" style={{ isolation: 'isolate' }}>
       <Background />
-      <Navbar onHomeClick={navigateHome} />
+      <Navbar 
+        onHomeClick={navigateHome} 
+        onAboutClick={navigateToAbout} 
+        onContactClick={navigateToContact}
+        currentPath={currentPath}
+      />
       
       <main className="relative z-10">
-        {currentPath === 'home' ? (
+        {currentPath === 'home' && (
           <div className="animate-page-fade">
             <Hero />
             <WorkGrid onDomainSelect={navigateToDomain} />
-            <About />
-            <Contact />
+            <About onReadMore={navigateToAbout} />
+            <Contact isPage={false} />
           </div>
-        ) : (
+        )}
+
+        {currentPath === 'domain' && selectedDomain && (
           <div className="animate-page-fade">
-            {selectedDomain && (
-              <DomainView 
-                domain={selectedDomain} 
-                onBack={navigateHome} 
-                onNavigate={navigateToDomain}
-              />
-            )}
+            <DomainView 
+              domain={selectedDomain} 
+              onBack={navigateHome} 
+              onNavigate={navigateToDomain}
+            />
+          </div>
+        )}
+
+        {currentPath === 'about' && (
+          <div className="animate-page-fade">
+            <AboutView onBack={navigateHome} />
+          </div>
+        )}
+
+        {currentPath === 'contact' && (
+          <div className="animate-page-fade pt-20">
+            <Contact isPage={true} onBack={navigateHome} />
           </div>
         )}
       </main>

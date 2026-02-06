@@ -65,7 +65,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
           </p>
           
           <div className="mt-2 sm:mt-8 overflow-hidden">
-            <span className="inline-block text-[7px] sm:text-[9px] font-bold tracking-[0.2em] sm:tracking-[0.4em] uppercase text-[#ff4d00] translate-y-full group-hover:translate-y-0 transition-transform duration-700 delay-300">
+            <span className="inline-block text-[7px] sm:text-[9px] font-bold tracking-[0.2em] sm:tracking-[0.4em] uppercase text-[#e63946] translate-y-full group-hover:translate-y-0 transition-transform duration-700 delay-300">
               View Case
             </span>
           </div>

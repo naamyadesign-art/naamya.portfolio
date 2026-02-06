@@ -29,7 +29,7 @@ const WorkGrid: React.FC<WorkGridProps> = ({ onDomainSelect }) => {
                   className="group relative text-[10px] md:text-[11px] font-black tracking-[0.3em] uppercase transition-all duration-500 pb-2 text-black/30 hover:text-black"
                 >
                   {domain}
-                  <span className="absolute bottom-0 left-0 h-[2.5px] bg-[#ff4d00] transition-all duration-700 ease-out w-0 group-hover:w-full"></span>
+                  <span className="absolute bottom-0 left-0 h-[2.5px] bg-[#e63946] transition-all duration-700 ease-out w-0 group-hover:w-full"></span>
                 </button>
               ))}
             </div>

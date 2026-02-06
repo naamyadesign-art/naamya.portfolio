@@ -33,7 +33,7 @@ const DomainView: React.FC<DomainViewProps> = ({ domain, onBack, onNavigate }) =
         <div className="mb-32">
           <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-12 border-b border-black/10 pb-20">
             <div>
-              <span className="inline-block text-[11px] font-black tracking-[0.5em] uppercase text-[#ff4d00] mb-6">
+              <span className="inline-block text-[11px] font-black tracking-[0.5em] uppercase text-[#e63946] mb-6">
                 Collection
               </span>
               <h1 className="text-7xl md:text-9xl lg:text-[12rem] font-serif leading-none tracking-tighter text-black">
@@ -59,7 +59,7 @@ const DomainView: React.FC<DomainViewProps> = ({ domain, onBack, onNavigate }) =
                 key={d}
                 onClick={() => onNavigate(d)}
                 className={`text-[10px] font-black tracking-[0.3em] uppercase transition-all ${
-                  domain === d ? 'text-[#ff4d00]' : 'text-black/30 hover:text-black'
+                  domain === d ? 'text-[#e63946]' : 'text-black/30 hover:text-black'
                 }`}
               >
                 {d}
