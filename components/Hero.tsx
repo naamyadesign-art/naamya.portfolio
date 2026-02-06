@@ -1,27 +1,65 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 const Hero: React.FC = () => {
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const handleMove = (e: MouseEvent) => {
+      setMousePos({ 
+        x: (e.clientX / window.innerWidth) - 0.5, 
+        y: (e.clientY / window.innerHeight) - 0.5 
+      });
+    };
+    window.addEventListener('mousemove', handleMove);
+    return () => window.removeEventListener('mousemove', handleMove);
+  }, []);
+
   return (
-    <section id="hero" className="min-h-[95vh] flex flex-col justify-center px-6 md:px-12 relative overflow-hidden">
-      <div className="max-w-7xl mx-auto w-full pt-24 md:pt-36 pb-12">
-        <div className="mb-8 md:mb-12 overflow-hidden">
-          <span className="inline-block text-[11px] md:text-sm font-black tracking-[0.5em] uppercase text-black/70 animate-slide-up">
+    <section id="hero" className="min-h-[90vh] flex flex-col justify-center px-6 md:px-12 relative overflow-hidden">
+      <div className="max-w-7xl mx-auto w-full pt-32 pb-12 z-10">
+        <div className="mb-12 overflow-hidden">
+          <span className="inline-block text-[10px] md:text-xs font-black tracking-[0.6em] uppercase text-black/60 animate-slide-up">
             Communication Design — Portfolio 2024
           </span>
         </div>
         
-        <h1 className="text-[14vw] sm:text-[12vw] md:text-[10vw] lg:text-[8rem] xl:text-[10.5rem] font-serif leading-[0.8] tracking-tighter mb-10 md:mb-16 select-none animate-reveal text-black drop-shadow-sm">
-          Design that <br className="hidden sm:block" />
-          <span className="italic font-normal text-black/90 sm:pr-4 inline-block">Speaks</span> 
-          <span className="sm:inline hidden"> </span>
-          Through <br className="hidden sm:block" />
-          Simplicity.
-        </h1>
+        <div className="relative select-none animate-reveal">
+          <h1 className="flex flex-col text-black tracking-tighter leading-[0.85]">
+            <span 
+              className="text-[13vw] md:text-[10vw] lg:text-[10rem] font-serif block z-10"
+              style={{ transform: `translate3d(${mousePos.x * 10}px, ${mousePos.y * 5}px, 0)` }}
+            >
+              Design that
+            </span>
+
+            <span 
+              className="text-[16vw] md:text-[12vw] lg:text-[12rem] italic font-normal block -mt-[0.1em] mb-[0.05em] relative z-20"
+              style={{ 
+                transform: `translate3d(${mousePos.x * -15}px, ${mousePos.y * -10}px, 0)`,
+                fontFamily: '"Playfair Display", serif'
+              }}
+            >
+              Speaks
+            </span> 
+
+            <div 
+              className="relative z-30 -mt-[0.15em]"
+              style={{ transform: `translate3d(${mousePos.x * 20}px, ${mousePos.y * 15}px, 0)` }}
+            >
+              <span className="text-[12vw] md:text-[9vw] lg:text-[9rem] font-serif block">
+                Through
+              </span>
+              <span className="text-[14vw] md:text-[11vw] lg:text-[11rem] font-black block -mt-[0.1em] tracking-[-0.04em] uppercase">
+                Simplicity.
+              </span>
+            </div>
+          </h1>
+        </div>
         
-        <div className="flex flex-col md:flex-row md:items-start justify-between mt-8 md:mt-16 gap-10 md:gap-20">
-          <div className="max-w-2xl animate-fade-in-up delay-300">
-            <p className="text-xl md:text-3xl lg:text-4xl text-black leading-tight font-medium tracking-tight bg-white/5 backdrop-blur-md rounded-2xl p-4 -ml-4 border border-white/10">
+        <div className="flex flex-col md:flex-row md:items-start justify-between mt-16 md:mt-24 gap-12 md:gap-20">
+          <div className="max-w-xl animate-fade-in-up delay-300">
+            <p className="text-lg md:text-2xl lg:text-3xl text-black/80 leading-snug font-normal tracking-tight">
               Naamya Goel is a visual storyteller crafting narrative-driven experiences through typography, digital ecosystems, and experimental print.
             </p>
           </div>
@@ -31,11 +69,10 @@ const Hero: React.FC = () => {
               href="#work" 
               className="group relative inline-flex items-center gap-6 md:gap-10 py-6"
             >
-              <span className="text-sm md:text-base font-black tracking-[0.4em] uppercase group-hover:tracking-[0.6em] transition-all duration-500 text-black">
-                View Works
+              <span className="text-[10px] md:text-xs font-black tracking-[0.5em] uppercase group-hover:tracking-[0.7em] transition-all duration-500 text-black">
+                Explore Work
               </span>
-              <div className="w-16 md:w-24 h-[3px] bg-black group-hover:w-20 md:group-hover:w-32 transition-all duration-700 ease-out origin-left"></div>
-              <div className="absolute -bottom-2 left-0 w-0 h-[2px] bg-black/40 group-hover:w-full transition-all duration-700"></div>
+              <div className="w-12 md:w-20 h-[3px] bg-black group-hover:w-24 md:group-hover:w-36 transition-all duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] origin-left"></div>
             </a>
           </div>
         </div>
@@ -43,8 +80,8 @@ const Hero: React.FC = () => {
       
       <style>{`
         @keyframes reveal {
-          0% { opacity: 0; transform: translateY(80px) rotate(1deg); }
-          100% { opacity: 1; transform: translateY(0) rotate(0deg); }
+          0% { opacity: 0; transform: translateY(80px); }
+          100% { opacity: 1; transform: translateY(0); }
         }
         @keyframes slide-up {
           0% { transform: translateY(100%); opacity: 0; }
@@ -56,8 +93,8 @@ const Hero: React.FC = () => {
         .animate-slide-up {
           animation: slide-up 1.2s cubic-bezier(0.19, 1, 0.22, 1) forwards;
         }
-        .delay-300 { animation-delay: 300ms; }
-        .delay-500 { animation-delay: 500ms; }
+        .delay-300 { animation-delay: 400ms; }
+        .delay-500 { animation-delay: 600ms; }
       `}</style>
     </section>
   );
