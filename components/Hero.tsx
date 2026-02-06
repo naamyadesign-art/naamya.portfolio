@@ -50,7 +50,7 @@ const Hero: React.FC = () => {
               <span className="text-[12vw] md:text-[9vw] lg:text-[9rem] font-serif block">
                 Through
               </span>
-              <span className="text-[14vw] md:text-[11vw] lg:text-[11rem] font-black block -mt-[0.1em] tracking-[-0.04em] uppercase">
+              <span className="text-[14vw] md:text-[11vw] lg:text-[11rem] font-black block -mt-[0.1em] tracking-[-0.04em] uppercase text-[#ff4d00]">
                 Simplicity.
               </span>
             </div>
