@@ -1,5 +1,7 @@
 {
-  "name": "Naamya Goel - Communication Design Portfolio",
-  "description": "A premium, minimal, and interactive portfolio website for a communication design student, featuring smooth animations and project galleries across multiple design domains.",
-  "requestFramePermissions": []
+  "name": "Naamya Goel - Communication Design Portfolio 2026",
+  "description": "A premium, minimal, and interactive portfolio created in 2026 for a communication design student. Built using Google AI Studio and modern frontend frameworks, featuring the Interactive Photobooth project.",
+  "requestFramePermissions": [
+    "camera"
+  ]
 }
