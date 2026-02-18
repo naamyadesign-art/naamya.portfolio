@@ -8,25 +8,42 @@ interface DomainViewProps {
   domain: Domain;
   onBack: () => void;
   onNavigate: (domain: Domain) => void;
+  onProjectSelect: (id: string) => void;
 }
 
-const DomainView: React.FC<DomainViewProps> = ({ domain, onBack, onNavigate }) => {
+const DomainView: React.FC<DomainViewProps> = ({ domain, onBack, onNavigate, onProjectSelect }) => {
   const filteredProjects = PROJECTS.filter(p => domain === 'All' ? true : p.domain === domain);
+
+  const handleDomainNav = (e: React.MouseEvent, d: Domain) => {
+    e.preventDefault();
+    onNavigate(d);
+  };
+
+  const handleProjectClick = (e: React.MouseEvent, id: string) => {
+    e.preventDefault();
+    onProjectSelect(id);
+  };
+
+  const handleBack = (e: React.MouseEvent) => {
+    e.preventDefault();
+    onBack();
+  };
 
   return (
     <div className="min-h-screen pt-40 pb-20 px-6 md:px-12">
       <div className="max-w-7xl mx-auto">
         {/* Navigation Breadcrumb */}
         <div className="mb-20">
-          <button 
-            onClick={onBack}
-            className="group flex items-center gap-4 text-[10px] font-black tracking-[0.4em] uppercase text-black/40 hover:text-black transition-colors"
+          <a 
+            href="#/"
+            onClick={handleBack}
+            className="group inline-flex items-center gap-4 text-[10px] font-black tracking-[0.4em] uppercase text-black/40 hover:text-black transition-colors"
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="group-hover:-translate-x-2 transition-transform">
               <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
             Back to Home
-          </button>
+          </a>
         </div>
 
         {/* Dynamic Domain Header */}
@@ -55,15 +72,16 @@ const DomainView: React.FC<DomainViewProps> = ({ domain, onBack, onNavigate }) =
           {/* Sub-navigation for Domains */}
           <div className="mt-12 flex flex-wrap gap-8">
             {DOMAINS.map(d => (
-              <button
+              <a
                 key={d}
-                onClick={() => onNavigate(d)}
+                href={`#work/${encodeURIComponent(d)}`}
+                onClick={(e) => handleDomainNav(e, d)}
                 className={`text-[10px] font-black tracking-[0.3em] uppercase transition-all ${
                   domain === d ? 'text-[#e63946]' : 'text-black/30 hover:text-black'
                 }`}
               >
                 {d}
-              </button>
+              </a>
             ))}
           </div>
         </div>
@@ -71,13 +89,15 @@ const DomainView: React.FC<DomainViewProps> = ({ domain, onBack, onNavigate }) =
         {/* Results Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 md:gap-20">
           {filteredProjects.map((project, index) => (
-            <div 
+            <a 
               key={project.id}
-              className="animate-fade-in-up"
+              href={`#project/${project.id}`}
+              onClick={(e) => handleProjectClick(e, project.id)}
+              className="animate-fade-in-up block"
               style={{ animationDelay: `${index * 50}ms` }}
             >
               <ProjectCard project={project} />
-            </div>
+            </a>
           ))}
         </div>
 

@@ -113,7 +113,7 @@ const AboutView: React.FC<AboutViewProps> = ({ onBack }) => {
           
           <div className="space-y-16">
             <div className="flex flex-col md:flex-row gap-8 md:gap-32">
-              <span className="text-[#e63946] text-xl font-bold tracking-tighter">2024 — 2028</span>
+              <span className="text-[#e63946] text-xl font-bold tracking-tighter">2024 — Present</span>
               <div>
                 <h3 className="text-3xl md:text-4xl font-serif mb-2">Bachelor of Communication Design</h3>
                 <p className="text-lg text-black/60">Unitedworld Institute of Design (UID), Gandhinagar</p>
@@ -122,10 +122,10 @@ const AboutView: React.FC<AboutViewProps> = ({ onBack }) => {
             </div>
 
             <div className="flex flex-col md:flex-row gap-8 md:gap-32">
-              <span className="text-[#e63946] text-xl font-bold tracking-tighter">2019 — 2021</span>
+              <span className="text-[#e63946] text-xl font-bold tracking-tighter">2017 — 2024</span>
               <div>
                 <h3 className="text-3xl md:text-4xl font-serif mb-2">Senior Secondary Education</h3>
-                <p className="text-lg text-black/60">Modern School, Barakhamba Road</p>
+                <p className="text-lg text-black/60">Welham Girls' School, Dehradun</p>
                 <p className="text-sm font-black tracking-widest uppercase text-black/30 mt-4">Focus: Fine Arts & Humanities</p>
               </div>
             </div>

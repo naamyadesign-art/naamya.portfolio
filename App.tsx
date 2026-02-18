@@ -9,32 +9,59 @@ import Footer from './components/Footer';
 import Background from './components/Background';
 import DomainView from './components/DomainView';
 import AboutView from './components/AboutView';
-import { Domain } from './types';
+import ProjectDetailView from './components/ProjectDetailView';
+import GalleryView from './components/GalleryView';
+import { Domain, Project } from './types';
+import { PROJECTS } from './data';
 
 const App: React.FC = () => {
   const [currentPath, setCurrentPath] = useState<string>('home');
   const [selectedDomain, setSelectedDomain] = useState<Domain | null>(null);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash.replace('#', '');
       
-      if (hash === 'about') {
-        setCurrentPath('about');
-        setSelectedDomain(null);
-        window.scrollTo(0, 0);
-      } else if (hash === 'contact') {
-        setCurrentPath('contact');
-        setSelectedDomain(null);
-        window.scrollTo(0, 0);
-      } else if (hash.startsWith('work/')) {
-        const domain = decodeURIComponent(hash.split('/')[1]) as Domain;
-        setSelectedDomain(domain);
-        setCurrentPath('domain');
-        window.scrollTo(0, 0);
-      } else {
+      // Clean up hash to remove potential leading slashes for matching
+      const cleanHash = hash.startsWith('/') ? hash.slice(1) : hash;
+      
+      if (!cleanHash || cleanHash === 'home') {
         setCurrentPath('home');
         setSelectedDomain(null);
+        setSelectedProject(null);
+        window.scrollTo(0, 0);
+      } else if (cleanHash === 'about') {
+        setCurrentPath('about');
+        setSelectedDomain(null);
+        setSelectedProject(null);
+        window.scrollTo(0, 0);
+      } else if (cleanHash === 'contact') {
+        setCurrentPath('contact');
+        setSelectedDomain(null);
+        setSelectedProject(null);
+        window.scrollTo(0, 0);
+      } else if (cleanHash === 'gallery') {
+        setCurrentPath('gallery');
+        setSelectedDomain(null);
+        setSelectedProject(null);
+        window.scrollTo(0, 0);
+      } else if (cleanHash.startsWith('work/')) {
+        const domain = decodeURIComponent(cleanHash.split('/')[1]) as Domain;
+        setSelectedDomain(domain);
+        setCurrentPath('domain');
+        setSelectedProject(null);
+        window.scrollTo(0, 0);
+      } else if (cleanHash.startsWith('project/')) {
+        const projectId = cleanHash.split('/')[1];
+        const project = PROJECTS.find(p => p.id === projectId);
+        if (project) {
+          setSelectedProject(project);
+          setCurrentPath('project');
+          window.scrollTo(0, 0);
+        }
+      } else {
+        setCurrentPath('home');
       }
     };
 
@@ -45,7 +72,15 @@ const App: React.FC = () => {
   }, []);
 
   const navigateToDomain = (domain: Domain) => {
-    window.location.hash = `work/${domain}`;
+    window.location.hash = `work/${encodeURIComponent(domain)}`;
+  };
+
+  const navigateToProject = (projectId: string) => {
+    window.location.hash = `project/${projectId}`;
+  };
+
+  const navigateToGallery = () => {
+    window.location.hash = 'gallery';
   };
 
   const navigateToAbout = () => {
@@ -57,11 +92,11 @@ const App: React.FC = () => {
   };
 
   const navigateHome = () => {
-    window.location.hash = '';
+    window.location.hash = '/';
   };
 
   return (
-    <div className="antialiased relative bg-white min-h-screen" style={{ isolation: 'isolate' }}>
+    <div className="antialiased relative min-h-screen" style={{ isolation: 'isolate' }}>
       <Background />
       <Navbar 
         onHomeClick={navigateHome} 
@@ -73,8 +108,12 @@ const App: React.FC = () => {
       <main className="relative z-10">
         {currentPath === 'home' && (
           <div className="animate-page-fade">
-            <Hero />
-            <WorkGrid onDomainSelect={navigateToDomain} />
+            <Hero onExploreClick={navigateToGallery} />
+            <WorkGrid 
+              onDomainSelect={navigateToDomain} 
+              onProjectSelect={navigateToProject} 
+              onMiscellaneousClick={navigateToGallery}
+            />
             <About onReadMore={navigateToAbout} />
             <Contact isPage={false} />
           </div>
@@ -86,7 +125,23 @@ const App: React.FC = () => {
               domain={selectedDomain} 
               onBack={navigateHome} 
               onNavigate={navigateToDomain}
+              onProjectSelect={navigateToProject}
             />
+          </div>
+        )}
+
+        {currentPath === 'project' && selectedProject && (
+          <div className="animate-page-fade">
+            <ProjectDetailView 
+              project={selectedProject} 
+              onBack={() => window.history.back()} 
+            />
+          </div>
+        )}
+
+        {currentPath === 'gallery' && (
+          <div className="animate-page-fade">
+            <GalleryView onBack={navigateHome} />
           </div>
         )}
 
